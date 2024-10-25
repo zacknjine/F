@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # QUIET LIBRARY TRACKER - Frontend
 
 *QUIET LIBRARY TRACKER* is a minimalist library management tool for small libraries or book clubs, streamlining book, member, and loan tracking with a simple web interface.
@@ -43,3 +44,5 @@ npm run build
 ## License
 
 This project is licensed under the MIT License.
+=======
+>>>>>>> Stashed changes
