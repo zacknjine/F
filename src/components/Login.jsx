@@ -1,36 +1,31 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Assuming you're using React Router
+import { useNavigate } from 'react-router-dom'; 
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // To programmatically navigate
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError(''); 
 
     try {
-      // Attempt to log in the user
       const response = await axios.post('http://localhost:5000/login', {
         username,
         password,
       });
 
-      // Store the token in localStorage
       localStorage.setItem('token', response.data.access_token);
 
-      // Redirect based on user role
       const redirectUrl = response.data.redirect;
       console.log('Login successful!', response.data);
 
-      // Navigate to the appropriate dashboard
       navigate(`/${redirectUrl}`);
 
     } catch (err) {
-      // Handle errors appropriately
       const errorMessage = err.response && err.response.data.message 
         ? err.response.data.message 
         : 'Login failed. Please try again.';

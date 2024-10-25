@@ -58,7 +58,6 @@ function ManageBorrowRequests() {
 
       const data = await response.json();
       setMessage(data.message);
-      // Refresh the borrow requests list after approval
       setBorrowRequests(borrowRequests.map(request => 
         request.id === borrowId ? { ...request, status: 'awaiting_pickup' } : request
       ));
@@ -83,7 +82,6 @@ function ManageBorrowRequests() {
 
       const data = await response.json();
       setMessage(data.message);
-      // Update the borrow request status to "picked up"
       setBorrowRequests(borrowRequests.map(request => 
         request.id === borrowId ? { ...request, status: 'picked up' } : request
       ));
@@ -108,7 +106,6 @@ function ManageBorrowRequests() {
 
       const data = await response.json();
       setMessage(data.message);
-      // Update the borrow request status to "returned"
       setBorrowRequests(borrowRequests.map(request => 
         request.id === borrowId ? { ...request, status: 'returned' } : request
       ));

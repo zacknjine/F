@@ -18,7 +18,7 @@ function AdminLogin() {
       });
 
       if (response.status === 200) {
-        window.location.href = '/admin-dashboard'; // Redirect after success
+        window.location.href = '/admin-dashboard'; 
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

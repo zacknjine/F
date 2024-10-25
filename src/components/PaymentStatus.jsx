@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Line } from 'react-chartjs-2'; 
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function PaymentStatus() {
   const location = useLocation();
@@ -8,8 +13,10 @@ function PaymentStatus() {
 
   const [paymentStatus, setPaymentStatus] = useState(message || "Checking payment status...");
   const [loading, setLoading] = useState(true);
+  const [paymentHistory, setPaymentHistory] = useState([]);
 
   useEffect(() => {
+   
     const fetchPaymentStatus = async () => {
       try {
         const response = await fetch(`http://localhost:5000/payment_status/${sale_id}`, {
@@ -31,16 +38,48 @@ function PaymentStatus() {
       }
     };
 
-    const intervalId = setInterval(fetchPaymentStatus, 5000);
-    return () => clearInterval(intervalId);
+  
+    const fetchPaymentHistory = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/payment_history`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+          setPaymentHistory(data.history); 
+        }
+      } catch (error) {
+        console.error("Error fetching payment history", error);
+      }
+    };
+
+  
+    fetchPaymentStatus();
+    fetchPaymentHistory();
   }, [sale_id]);
 
   const handleRetryCheckout = () => {
     if (book) {
-        navigate(`/checkout/${book.id}`, { state: { book } });
+      navigate('/checkout/' + book.id, { state: { book } });
     }
-    };
-  
+  };
+
+
+  const chartData = {
+    labels: paymentHistory.map((entry) => new Date(entry.date).toLocaleDateString()), 
+    datasets: [
+      {
+        label: 'Amount Paid',
+        data: paymentHistory.map((entry) => entry.amount), 
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+      },
+    ],
+  };
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
@@ -53,6 +92,7 @@ function PaymentStatus() {
             <p className={`text-lg font-semibold ${paymentStatus.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
               {paymentStatus}
             </p>
+
             {book && (
               <div className="mt-4">
                 <h2 className="text-xl font-semibold">Book Details:</h2>
@@ -61,15 +101,21 @@ function PaymentStatus() {
                 <p><strong>Price:</strong> ${book.price.toFixed(2)}</p>
               </div>
             )}
-           {(paymentStatus.includes('failed') || paymentStatus.includes('pending')) && (
-            <button 
+
+            {(paymentStatus.includes('failed') || paymentStatus.includes('pending')) && (
+              <button 
                 onClick={handleRetryCheckout} 
                 className="mt-6 bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-lg hover:bg-blue-600 transition duration-300"
-            >
+              >
                 Retry Checkout
-            </button>
+              </button>
             )}
-
+            {paymentHistory.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold mb-4">Payment History</h3>
+                <Line data={chartData} />
+              </div>
+            )}
           </div>
         )}
       </div>

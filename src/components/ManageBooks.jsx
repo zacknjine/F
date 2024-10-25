@@ -7,10 +7,10 @@ function ManageBooks() {
     author: '',
     category: '',
     description: '',
-    release_date: '', // Match backend field name
+    release_date: '', 
     price: '',
     stock: '',
-    photo: null, // State to handle file upload
+    photo: null, 
   });
 
   const [error, setError] = useState('');
@@ -28,7 +28,7 @@ function ManageBooks() {
     e.preventDefault();
     setError('');
 
-    // Prepare data for submission
+   
     const formData = new FormData();
     for (const key in bookData) {
       formData.append(key, bookData[key]);
@@ -38,14 +38,13 @@ function ManageBooks() {
       const response = await axios.post('http://localhost:5000/add_book', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Adjust if needed
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
 
       console.log(response.data);
       alert('Book added successfully!');
 
-      // Reset the form after successful submission
       setBookData({
         title: '',
         author: '',
@@ -85,7 +84,6 @@ function ManageBooks() {
           className="w-full mb-4 p-2 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 transition"
         />
 
-        {/* Dropdown for Category */}
         <select
           name="category"
           value={bookData.category}
@@ -116,7 +114,7 @@ function ManageBooks() {
         ></textarea>
         <input
           type="date"
-          name="release_date" // Field name to match backend
+          name="release_date" 
           value={bookData.release_date}
           onChange={handleChange}
           required
@@ -142,7 +140,7 @@ function ManageBooks() {
         />
         <input
           type="file"
-          name="photo" // This matches what the backend is expecting
+          name="photo"
           onChange={handleImageChange}
           required
           className="w-full mb-4 p-2 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 transition"
