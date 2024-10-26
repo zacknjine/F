@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../App';
+
 
 function ManageBorrowRequests() {
   const [borrowRequests, setBorrowRequests] = useState([]);
@@ -9,7 +11,7 @@ function ManageBorrowRequests() {
   useEffect(() => {
     const fetchBorrowRequests = async () => {
       try {
-        const response = await fetch('http://localhost:5000/manage_borrow_requests', {
+        const response = await fetch(`${API_BASE_URL}/manage_borrow_requests`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -42,7 +44,7 @@ function ManageBorrowRequests() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/approve_borrow/${borrowId}`, {
+      const response = await fetch(`${API_BASE_URL}/approve_borrow/${borrowId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -58,6 +60,7 @@ function ManageBorrowRequests() {
 
       const data = await response.json();
       setMessage(data.message);
+      // Refresh the borrow requests list after approval
       setBorrowRequests(borrowRequests.map(request => 
         request.id === borrowId ? { ...request, status: 'awaiting_pickup' } : request
       ));
@@ -68,7 +71,7 @@ function ManageBorrowRequests() {
 
   const handleMarkPickedUp = async (borrowId) => {
     try {
-      const response = await fetch(`http://localhost:5000/mark_picked_up/${borrowId}`, {
+      const response = await fetch(`${API_BASE_URL}/mark_picked_up/${borrowId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -82,6 +85,7 @@ function ManageBorrowRequests() {
 
       const data = await response.json();
       setMessage(data.message);
+      // Update the borrow request status to "picked up"
       setBorrowRequests(borrowRequests.map(request => 
         request.id === borrowId ? { ...request, status: 'picked up' } : request
       ));
@@ -92,7 +96,7 @@ function ManageBorrowRequests() {
 
   const handleMarkReturned = async (borrowId) => {
     try {
-      const response = await fetch(`http://localhost:5000/mark_returned/${borrowId}`, {
+      const response = await fetch(`${API_BASE_URL}/mark_returned/${borrowId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -106,6 +110,7 @@ function ManageBorrowRequests() {
 
       const data = await response.json();
       setMessage(data.message);
+      // Update the borrow request status to "returned"
       setBorrowRequests(borrowRequests.map(request => 
         request.id === borrowId ? { ...request, status: 'returned' } : request
       ));

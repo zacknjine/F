@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Line } from 'react-chartjs-2'; 
+import { Line } from 'react-chartjs-2'; // Import Line chart from react-chartjs-2
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { API_BASE_URL } from '../App';
 
 
+// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function PaymentStatus() {
@@ -16,10 +18,10 @@ function PaymentStatus() {
   const [paymentHistory, setPaymentHistory] = useState([]);
 
   useEffect(() => {
-   
+    // Fetch payment status
     const fetchPaymentStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/payment_status/${sale_id}`, {
+        const response = await fetch(`${API_BASE_URL}/payment_status/${sale_id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -38,10 +40,10 @@ function PaymentStatus() {
       }
     };
 
-  
+    // Fetch payment history
     const fetchPaymentHistory = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/payment_history`, {
+        const response = await fetch(`${API_BASE_URL}/payment_history`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -49,14 +51,14 @@ function PaymentStatus() {
         const data = await response.json();
 
         if (response.ok) {
-          setPaymentHistory(data.history); 
+          setPaymentHistory(data.history); // Set payment history data
         }
       } catch (error) {
         console.error("Error fetching payment history", error);
       }
     };
 
-  
+    // Fetch both payment status and history
     fetchPaymentStatus();
     fetchPaymentHistory();
   }, [sale_id]);
@@ -67,13 +69,13 @@ function PaymentStatus() {
     }
   };
 
-
+  // Prepare data for graph
   const chartData = {
-    labels: paymentHistory.map((entry) => new Date(entry.date).toLocaleDateString()), 
+    labels: paymentHistory.map((entry) => new Date(entry.date).toLocaleDateString()), // X-axis labels: Payment dates
     datasets: [
       {
         label: 'Amount Paid',
-        data: paymentHistory.map((entry) => entry.amount), 
+        data: paymentHistory.map((entry) => entry.amount), // Y-axis data: Payment amounts
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
@@ -110,6 +112,8 @@ function PaymentStatus() {
                 Retry Checkout
               </button>
             )}
+
+            {/* Display payment history graph */}
             {paymentHistory.length > 0 && (
               <div className="mt-8">
                 <h3 className="text-xl font-semibold mb-4">Payment History</h3>
