@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../App';
 
 function Checkout() {
   const { id } = useParams();
   const location = useLocation();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate(); // Use useNavigate instead of useHistory
   const { book } = location.state || {};
 
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -26,7 +27,7 @@ function Checkout() {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:5000/checkout/${book.id}`, {
+      const response = await fetch(`${API_BASE_URL}/checkout/${book.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,6 +39,7 @@ function Checkout() {
       const data = await response.json();
 
       if (response.ok) {
+        // Redirect to the PaymentStatus component with sale_id, message, and book details
         navigate('/payment-status', {
           state: { 
             sale_id: data.sale_id, 
@@ -64,7 +66,7 @@ function Checkout() {
       <h1 className="text-3xl font-bold mb-6 text-[#003180ff]">Checkout for {book.title}</h1>
       <div className="bg-white rounded-lg shadow-lg p-6">
         <img 
-          src={`http://localhost:5000/static/uploads/${book.photo}`} 
+          src={`${API_BASE_URL}/static/uploads/${book.photo}`} 
           alt={book.title} 
           className="w-full h-64 object-cover mb-4"
         />

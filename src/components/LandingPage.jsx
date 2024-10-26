@@ -1,6 +1,8 @@
 import React from 'react';
 import landingImage from '../Images/landing.jpeg'; // Importing the background image
 import { Link } from 'react-router-dom'; // Import Link for navigation
+import { API_BASE_URL } from '../App';
+
 
 function LandingPage() {
   return (

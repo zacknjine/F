@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../App';
 
 function Books() {
   const [books, setBooks] = useState([]);
@@ -14,7 +15,7 @@ function Books() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const booksResponse = await fetch('http://localhost:5000/all_books/', {
+        const booksResponse = await fetch(`${API_BASE_URL}/all_books`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -28,7 +29,7 @@ function Books() {
         const booksData = await booksResponse.json();
         setBooks(booksData);
 
-        const userResponse = await fetch('http://localhost:5000/borrowed_books', {
+        const userResponse = await fetch(`${API_BASE_URL}/borrowed_books`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -58,7 +59,7 @@ function Books() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/borrow_book/${bookId}`, {
+      const response = await fetch(`${API_BASE_URL}/borrow_book/${bookId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -104,7 +105,7 @@ function Books() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/cancel_borrow/${borrowId}`, {
+      const response = await fetch(`${API_BASE_URL}/cancel_borrow/${borrowId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -149,7 +150,7 @@ function Books() {
 
           return (
             <div key={book.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <img src={`http://localhost:5000/static/uploads/${book.photo}`} alt={book.title} className="w-full h-64 object-cover" />
+              <img src={`${API_BASE_URL}/static/uploads/${book.photo}`} alt={book.title} className="w-full h-64 object-cover" />
               <div className="p-4">
                 <h2 className="text-xl font-semibold mb-2">{book.title}</h2>
                 <p className="text-gray-600"><strong>Author:</strong> {book.author}</p>

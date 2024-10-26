@@ -9,8 +9,8 @@ import UserDashboard from './components/UserDashboard';
 import ContactUs from './components/ContactUs'; 
 import Books from './components/Books';
 import ManageBorrowRequests from './components/ManageBorrowRequests';
-import Checkout from './components/Checkout';
 import PaymentStatus from './components/PaymentStatus';
+import Checkout from './components/Checkout';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/manage-books" element={<ManageBooks />} /> {}
         <Route path="/manage-users" element={<ManageUsers />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
@@ -31,5 +31,8 @@ function App() {
     </Router>
   );
 }
+
+// App.jsx or config.js
+export const API_BASE_URL = "https://f3bf9b83f211c75f8bcfa013df7fbaf0.serveo.net"; 
 
 export default App;
